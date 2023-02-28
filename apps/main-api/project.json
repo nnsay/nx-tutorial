@@ -1,21 +1,25 @@
 {
-  "name": "tutotial",
+  "name": "main-api",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/tutotial/src",
+  "sourceRoot": "apps/main-api/src",
   "projectType": "application",
   "targets": {
     "build": {
       "executor": "@nrwl/webpack:webpack",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "target": "node",
         "compiler": "tsc",
-        "outputPath": "dist/apps/tutotial",
-        "main": "apps/tutotial/src/main.ts",
-        "tsConfig": "apps/tutotial/tsconfig.app.json",
-        "assets": ["apps/tutotial/src/assets"],
+        "outputPath": "dist/apps/main-api",
+        "main": "apps/main-api/src/main.ts",
+        "tsConfig": "apps/main-api/tsconfig.app.json",
+        "assets": [
+          "apps/main-api/src/assets"
+        ],
         "isolatedConfig": true,
-        "webpackConfig": "apps/tutotial/webpack.config.js"
+        "webpackConfig": "apps/main-api/webpack.config.js"
       },
       "configurations": {
         "production": {
@@ -28,26 +32,32 @@
     "serve": {
       "executor": "@nrwl/js:node",
       "options": {
-        "buildTarget": "tutotial:build"
+        "buildTarget": "main-api:build"
       },
       "configurations": {
         "production": {
-          "buildTarget": "tutotial:build:production"
+          "buildTarget": "main-api:build:production"
         }
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["apps/tutotial/**/*.ts"]
+        "lintFilePatterns": [
+          "apps/main-api/**/*.ts"
+        ]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
       "options": {
-        "jestConfig": "apps/tutotial/jest.config.ts",
+        "jestConfig": "apps/main-api/jest.config.ts",
         "passWithNoTests": true
       },
       "configurations": {
@@ -58,5 +68,7 @@
       }
     }
   },
-  "tags": []
+  "tags": [
+    "scope:app"
+  ]
 }

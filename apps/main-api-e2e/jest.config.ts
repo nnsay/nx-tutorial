@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'tutotial-e2e',
+  displayName: 'main-api-e2e',
   preset: '../../jest.preset.js',
   globals: {
     'ts-jest': {
@@ -15,5 +15,5 @@ export default {
     '^.+\\.[tj]s$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/tutotial-e2e',
+  coverageDirectory: '../../coverage/main-api-e2e',
 };

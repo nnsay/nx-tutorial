@@ -1,13 +1,13 @@
 {
-  "name": "tutotial-e2e",
+  "name": "main-api-e2e",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "implicitDependencies": ["tutotial"],
+  "implicitDependencies": ["main-api"],
   "targets": {
     "e2e": {
       "executor": "@nrwl/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
       "options": {
-        "jestConfig": "apps/tutotial-e2e/jest.config.ts",
+        "jestConfig": "apps/main-api-e2e/jest.config.ts",
         "passWithNoTests": true
       }
     },
@@ -15,7 +15,7 @@
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/tutotial-e2e/**/*.{js,ts}"]
+        "lintFilePatterns": ["apps/main-api-e2e/**/*.{js,ts}"]
       }
     }
   }

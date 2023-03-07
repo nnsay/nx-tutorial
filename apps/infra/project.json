@@ -1,0 +1,86 @@
+{
+  "name": "infra",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/infra/src",
+  "targets": {
+    "deploy": {
+      "executor": "@ago-dev/nx-aws-cdk-v2:deploy",
+      "options": {
+        "stacks": "--all",
+        "verbose": ""
+      }
+    },
+    "cert": {
+      "executor": "@ago-dev/nx-aws-cdk-v2:deploy",
+      "options": {
+        "stacks": "CertStack",
+        "verbose": ""
+      }
+    },
+    "website": {
+      "executor": "@ago-dev/nx-aws-cdk-v2:deploy",
+      "options": {
+        "stacks": "WebsiteStack DNSStack",
+        "verbose": ""
+      }
+    },
+    "debug": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "cdk synth --app 'ts-node apps/infra/src/main.ts' WebsiteStack DNSStack --verbose"
+        ]
+      },
+      "dependsOn": [
+        {
+          "projects": "dependencies",
+          "target": "build"
+        }
+      ]
+    },
+    "destroy": {
+      "executor": "@ago-dev/nx-aws-cdk-v2:destroy",
+      "options": {
+        "stacks": "DNSStack",
+        "force": "",
+        "verbose": ""
+      }
+    },
+    "bootstrap": {
+      "executor": "@ago-dev/nx-aws-cdk-v2:bootstrap",
+      "options": {}
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "apps/infra/**/*.ts"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
+      "options": {
+        "jestConfig": "apps/infra/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    }
+  },
+  "implicitDependencies": [
+    "main-api"
+  ],
+  "tags": []
+}

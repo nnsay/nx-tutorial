@@ -3,7 +3,6 @@ import {
   aws_s3 as s3,
   aws_s3_deployment as s3deploy,
   aws_cloudfront as cloudfront,
-  aws_route53 as route53,
 } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { WebsiteStackProps } from '../@types/stack-props';
@@ -80,24 +79,15 @@ export class EnvStack extends cdk.Stack {
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.ALLOW_ALL,
       }
     );
+
     new cdk.CfnOutput(this, 'distributionId', {
       value: distribution.distributionId,
       exportName: 'distributionId',
     });
 
-    // route53
-    const hostedZone = route53.HostedZone.fromHostedZoneAttributes(
-      props.dnsStack,
-      'rootHostedzone',
-      {
-        hostedZoneId: props.hostedZoneId,
-        zoneName: props.zoneName,
-      }
-    );
-    new route53.CnameRecord(props.dnsStack, 'websiteCname', {
-      recordName: this.stackName,
-      domainName: distribution.distributionDomainName,
-      zone: hostedZone,
+    new cdk.CfnOutput(this, 'distributionDomainName', {
+      value: distribution.distributionDomainName,
+      exportName: 'distributionDomainName',
     });
   }
 }

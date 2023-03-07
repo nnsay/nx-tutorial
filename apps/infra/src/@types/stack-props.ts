@@ -7,15 +7,14 @@ export interface CertStackProps extends cdk.StackProps {
 }
 
 export interface WebsiteStackProps extends cdk.StackProps {
-  iamCertificateId: string;
-
   stackName: string;
 
-  dnsStack: cdk.Stack;
-  hostedZoneId: string;
-  zoneName: string;
+  iamCertificateId: string;
 }
 
 export interface DNSStackProps extends cdk.StackProps {
-  distributionDomainName: string;
+  stackName: string;
+
+  zoneName: string;
+  hostedZoneId: string;
 }

@@ -4,13 +4,6 @@
   "projectType": "application",
   "sourceRoot": "apps/infra/src",
   "targets": {
-    "deploy": {
-      "executor": "@ago-dev/nx-aws-cdk-v2:deploy",
-      "options": {
-        "stacks": "--all",
-        "verbose": ""
-      }
-    },
     "cert": {
       "executor": "@ago-dev/nx-aws-cdk-v2:deploy",
       "options": {
@@ -21,15 +14,78 @@
     "website": {
       "executor": "@ago-dev/nx-aws-cdk-v2:deploy",
       "options": {
-        "stacks": "WebsiteStack DNSStack",
+        "stacks": "WebsiteStack",
         "verbose": ""
+      },
+      "dependsOn": [
+        {
+          "projects": "self",
+          "target": "cert"
+        }
+      ]
+    },
+    "dns": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "./apps/infra/scripts/dns.sh"
+        ]
+      },
+      "dependsOn": [
+        {
+          "projects": "self",
+          "target": "website"
+        }
+      ]
+    },
+    "deploy2": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "echo done"
+        ]
+      },
+      "dependsOn": [
+        {
+          "projects": "self",
+          "target": "dns"
+        }
+      ]
+    },
+    "deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "cdk deploy --app 'ts-node apps/infra/src/main.ts' WebsiteStack --require-approval never",
+          "./apps/infra/scripts/dns.sh"
+        ],
+        "parallel": false
+      }
+    },
+    "destroy2": {
+      "executor": "@ago-dev/nx-aws-cdk-v2:destroy",
+      "options": {
+        "stacks": "WebsiteStack CertStack",
+        "force": "",
+        "verbose": ""
+      }
+    },
+    "destroy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "./apps/infra/scripts/dns.sh destroy",
+          "cdk destroy --app 'ts-node apps/infra/src/main.ts' WebsiteStack --require-approval never",
+          "cdk destroy --app 'ts-node apps/infra/src/main.ts' CertStack --require-approval never"
+        ],
+        "parallel": false
       }
     },
     "debug": {
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "cdk synth --app 'ts-node apps/infra/src/main.ts' WebsiteStack DNSStack --verbose"
+          "./apps/infra/scripts/dns.sh"
         ]
       },
       "dependsOn": [
@@ -38,14 +94,6 @@
           "target": "build"
         }
       ]
-    },
-    "destroy": {
-      "executor": "@ago-dev/nx-aws-cdk-v2:destroy",
-      "options": {
-        "stacks": "DNSStack",
-        "force": "",
-        "verbose": ""
-      }
     },
     "bootstrap": {
       "executor": "@ago-dev/nx-aws-cdk-v2:bootstrap",

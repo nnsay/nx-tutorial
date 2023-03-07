@@ -34,7 +34,7 @@ export class CertStack extends cdk.Stack {
         path.join(
           __dirname,
           '..',
-          'assets/domainCerts/8994950__visualdynamics.cn.chain.pem'
+          'assets/domainCerts/8994950__visualdynamics.cn.csr'
         ),
         { encoding: 'utf-8' }
       ),

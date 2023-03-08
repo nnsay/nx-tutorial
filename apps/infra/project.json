@@ -7,58 +7,25 @@
     "cert": {
       "executor": "@ago-dev/nx-aws-cdk-v2:deploy",
       "options": {
-        "stacks": "CertStack",
-        "verbose": ""
+        "stacks": "certStack",
+        "force": ""
       }
     },
-    "website": {
-      "executor": "@ago-dev/nx-aws-cdk-v2:deploy",
+    "cert-destroy": {
+      "executor": "@ago-dev/nx-aws-cdk-v2:destroy",
       "options": {
-        "stacks": "WebsiteStack",
-        "verbose": ""
-      },
-      "dependsOn": [
-        {
-          "projects": "self",
-          "target": "cert"
-        }
-      ]
-    },
-    "dns": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          "./apps/infra/scripts/dns.sh"
-        ]
-      },
-      "dependsOn": [
-        {
-          "projects": "self",
-          "target": "website"
-        }
-      ]
-    },
-    "deploy2": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          "echo done"
-        ]
-      },
-      "dependsOn": [
-        {
-          "projects": "self",
-          "target": "dns"
-        }
-      ]
+        "stacks": "certStack",
+        "force": ""
+      }
     },
     "deploy": {
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "cdk deploy --app 'ts-node apps/infra/src/main.ts' WebsiteStack --require-approval never",
-          "./apps/infra/scripts/dns.sh"
+          "cdk deploy websiteStack",
+          "./scripts/dns.sh"
         ],
+        "cwd": "./apps/infra",
         "parallel": false
       },
       "dependsOn": [
@@ -68,20 +35,12 @@
         }
       ]
     },
-    "destroy2": {
-      "executor": "@ago-dev/nx-aws-cdk-v2:destroy",
-      "options": {
-        "stacks": "WebsiteStack CertStack",
-        "force": "",
-        "verbose": ""
-      }
-    },
     "destroy": {
       "executor": "nx:run-commands",
       "options": {
         "commands": [
           "./scripts/dns.sh destroy",
-          "cdk destroy WebsiteStack CertStack --force"
+          "cdk destroy websiteStack certStack --force"
         ],
         "cwd": "./apps/infra",
         "parallel": false
@@ -91,8 +50,12 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "./apps/infra/scripts/dns.sh"
-        ]
+          "#cdk metadata websiteStack",
+          "#cdk destroy websiteStack --force",
+          "./scripts/dns.sh destroy"
+        ],
+        "cwd": "./apps/infra",
+        "parallel": false
       },
       "dependsOn": [
         {

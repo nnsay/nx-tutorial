@@ -6,48 +6,22 @@ import * as path from 'path';
 import { CertStackProps } from '../@types/stack-props';
 
 export class CertStack extends cdk.Stack {
-  // 泛域名证书
-  public readonly serverCertificateName: string;
-
   constructor(scope: Construct, id: string, props?: CertStackProps) {
     super(scope, id, props);
 
-    const domainCert = new iam.CfnServerCertificate(this, 'domainCert', {
-      serverCertificateName: 'vd20231214',
-      privateKey: fs.readFileSync(
-        path.join(
-          __dirname,
-          '..',
-          'assets/domainCerts/8994950__visualdynamics.cn.key'
-        ),
-        { encoding: 'utf-8' }
-      ),
-      certificateBody: fs.readFileSync(
-        path.join(
-          __dirname,
-          '..',
-          'assets/domainCerts/8994950__visualdynamics.cn.pem'
-        ),
-        { encoding: 'utf-8' }
-      ),
-      certificateChain: fs.readFileSync(
-        path.join(
-          __dirname,
-          '..',
-          'assets/domainCerts/8994950__visualdynamics.cn.csr'
-        ),
-        { encoding: 'utf-8' }
-      ),
+    // 证书通过如下环境变量给与
+    // - CERT_PRIVATE_[ENV_NAME]_[DOMAIN]
+    // - CERT_BODY_[ENV_NAME]_[DOMAIN]
+    // - CERT_CSR_[ENV_NAME]_[DOMAIN]
+    const domain = props.sld.split('.')[0];
+    const domainEnvName = domain.toUpperCase();
+    const envName = props.codeEnvName.toUpperCase();
+    new iam.CfnServerCertificate(this, `${domain}Cert`, {
+      serverCertificateName: `${domain}2023`,
+      privateKey: process.env[`CERT_PRIVATE_${envName}_${domainEnvName}`],
+      certificateBody: process.env[`CERT_BODY_${envName}_${domainEnvName}`],
+      certificateChain: process.env[`CERT_CSR_${envName}_${domainEnvName}`],
       path: '/cloudfront/',
-    });
-
-    this.serverCertificateName = domainCert.attrArn;
-
-    // WARN: ServerCertificate仅仅支持Arn属性,所以这里输出名称而不是证书ID
-    // https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-servercertificate.html
-    new cdk.CfnOutput(this, 'serverCertificateName', {
-      value: domainCert.serverCertificateName,
-      exportName: 'serverCertificateName',
     });
   }
 }

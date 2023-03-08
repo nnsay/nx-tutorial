@@ -13,7 +13,6 @@ test('Common Stack', () => {
         Type: 'AWS::IAM::ServerCertificate',
         Properties: {
           Path: '/cloudfront/',
-          ServerCertificateName: 'vd20231214',
         },
       },
     },

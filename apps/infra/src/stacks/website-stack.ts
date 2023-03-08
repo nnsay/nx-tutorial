@@ -1,12 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
-import {
-  aws_s3 as s3,
-  aws_s3_deployment as s3deploy,
-  aws_cloudfront as cloudfront,
-} from 'aws-cdk-lib';
+import { aws_s3 as s3, aws_cloudfront as cloudfront } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { WebsiteStackProps } from '../@types/stack-props';
-import * as path from 'path';
 
 export class EnvStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: WebsiteStackProps) {
@@ -33,19 +28,8 @@ export class EnvStack extends cdk.Stack {
       websiteIndexDocument: 'index.html',
     });
 
-    // deployment
-    new s3deploy.BucketDeployment(this, `${this.stackName}Deployment`, {
-      sources: [
-        s3deploy.Source.asset(
-          path.resolve(path.join(__dirname, '../../../../dist/tmp'))
-        ),
-      ],
-      destinationBucket: websiteBucket,
-      destinationKeyPrefix: '/',
-    });
-
     // cloudfront
-    const websiteDomain = `${this.stackName}.visualdynamics.cn`;
+    const websiteDomain = `${props.codeEnvName}.${props.sld}`;
     const distribution = new cloudfront.CloudFrontWebDistribution(
       this,
       `${this.stackName}WebSiteCloudFront`,
@@ -83,12 +67,12 @@ export class EnvStack extends cdk.Stack {
 
     new cdk.CfnOutput(this, 'distributionId', {
       value: distribution.distributionId,
-      exportName: 'distributionId',
+      exportName: `${this.stackName}-distributionId`,
     });
 
     new cdk.CfnOutput(this, 'distributionDomainName', {
       value: distribution.distributionDomainName,
-      exportName: 'distributionDomainName',
+      exportName: `${this.stackName}-distributionDomainName`,
     });
   }
 }

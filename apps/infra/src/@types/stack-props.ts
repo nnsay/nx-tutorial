@@ -15,6 +15,7 @@ export interface WebsiteStackProps extends cdk.StackProps {
 export interface DNSStackProps extends cdk.StackProps {
   stackName: string;
 
+  recordName: string;
   zoneName: string;
   hostedZoneId: string;
 }

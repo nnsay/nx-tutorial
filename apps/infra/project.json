@@ -60,7 +60,13 @@
           "./apps/infra/scripts/dns.sh"
         ],
         "parallel": false
-      }
+      },
+      "dependsOn": [
+        {
+          "projects": "dependencies",
+          "target": "build"
+        }
+      ]
     },
     "destroy2": {
       "executor": "@ago-dev/nx-aws-cdk-v2:destroy",
@@ -74,10 +80,10 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "./apps/infra/scripts/dns.sh destroy",
-          "cdk destroy --app 'ts-node apps/infra/src/main.ts' WebsiteStack --require-approval never",
-          "cdk destroy --app 'ts-node apps/infra/src/main.ts' CertStack --require-approval never"
+          "./scripts/dns.sh destroy",
+          "cdk destroy WebsiteStack CertStack --force"
         ],
+        "cwd": "./apps/infra",
         "parallel": false
       }
     },

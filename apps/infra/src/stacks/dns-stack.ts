@@ -20,7 +20,7 @@ export class DNSStack extends cdk.Stack {
       description: 'The cloudfront domain name',
     });
     new route53.CnameRecord(this, 'websiteCname', {
-      recordName: this.stackName,
+      recordName: props.recordName,
       domainName: domainName.valueAsString,
       zone: hostedZone,
     });

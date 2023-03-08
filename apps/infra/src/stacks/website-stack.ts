@@ -41,6 +41,7 @@ export class EnvStack extends cdk.Stack {
         ),
       ],
       destinationBucket: websiteBucket,
+      destinationKeyPrefix: '/',
     });
 
     // cloudfront

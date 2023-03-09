@@ -1,7 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import { CertStack } from './stacks/cert-stack';
 import { DNSStack } from './stacks/dns-stack';
-import { EnvStack } from './stacks/website-stack';
+import { WebsiteStack } from './stacks/website-stack';
 
 // 参数检查
 const envName = process.env.ENV_NAME ?? 'sandbox';
@@ -63,7 +63,7 @@ const cert = new CertStack(app, 'certStack', {
 });
 addTags(cert);
 
-const website = new EnvStack(app, 'websiteStack', {
+const website = new WebsiteStack(app, 'websiteStack', {
   env: { region: 'cn-northwest-1' },
   stackName: envId,
   description: 'setup a website',

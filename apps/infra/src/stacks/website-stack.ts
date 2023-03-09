@@ -3,7 +3,7 @@ import { aws_s3 as s3, aws_cloudfront as cloudfront } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { WebsiteStackProps } from '../@types/stack-props';
 
-export class EnvStack extends cdk.Stack {
+export class WebsiteStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: WebsiteStackProps) {
     super(scope, id, props);
 

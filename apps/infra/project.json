@@ -52,7 +52,8 @@
         "commands": [
           "#cdk metadata websiteStack",
           "#cdk destroy websiteStack --force",
-          "./scripts/dns.sh destroy"
+          "#./scripts/dns.sh destroy",
+          "./scripts/dns.sh"
         ],
         "cwd": "./apps/infra",
         "parallel": false
